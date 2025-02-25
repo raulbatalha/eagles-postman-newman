@@ -30,16 +30,16 @@ jobs:
 
       - name: Run Collection Ítalo
         run: |
-          newman run /etc/newman/insomnia-data/Italo-QualityEagles.postman_collection.json \
-          --globals /etc/newman/insomnia-data/Italo-QualityEagles.postman_globals.json \
+          newman run ./insomnia-data/Italo-QualityEagles.postman_collection.json \
+          --globals ./insomnia-data/Italo-QualityEagles.postman_globals.json \
           --delay-request 2 \
           --reporters cli,htmlextra \
           --reporter-htmlextra-export ./result/Report_Collection_Italo.html
 
       - name: Run Collection Jamile
         run: |
-          newman run /etc/newman/insomnia-data/Jamile-QualityEagles.postman_collection.json \
-          --globals /etc/newman/insomnia-data/Jamile-QualityEagles.postman_globals.json \
+          newman run ./insomnia-data/Jamile-QualityEagles.postman_collection.json \
+          --globals ./insomnia-data/Jamile-QualityEagles.postman_globals.json \
           --delay-request 2 \
           --reporters cli,htmlextra \
           --reporter-htmlextra-export ./result/Report_Collection_Jamile.html
@@ -69,11 +69,11 @@ jobs:
 
       - name: Verify files exist
         run: |
-          if [ ! -f "/etc/newman/insomnia-data/Tadeu-QualityEagles-Collection.json" ]; then
+          if [ ! -f "./insomnia-data/Tadeu-QualityEagles-Collection.json" ]; then
             echo "Error: Tadeu-QualityEagles-Collection.json not found!"
             exit 1
           fi
-          if [ ! -f "/etc/newman/insomnia-data/Tadeu-QualityEagles-Globals.json" ]; then
+          if [ ! -f "./insomnia-data/Tadeu-QualityEagles-Globals.json" ]; then
             echo "Error: Tadeu-QualityEagles-Globals.json not found!"
             exit 1
           fi
@@ -93,7 +93,7 @@ jobs:
 
       - name: Run Insomnia tests
         run: |
-          inso run test /etc/newman/insomnia-data/Tadeu-QualityEagles-Collection.json \
-          --env /etc/newman/insomnia-data/Tadeu-QualityEagles-Globals.json \
-          --workingDir /etc/newman/insomnia-data \
+          inso run test ./insomnia-data/Tadeu-QualityEagles-Collection.json \
+          --env ./insomnia-data/Tadeu-QualityEagles-Globals.json \
+          --workingDir ./insomnia-data \
           --verbose --ci
