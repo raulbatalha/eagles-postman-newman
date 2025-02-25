@@ -46,6 +46,14 @@ jobs:
           echo "Listing copied files in /tmp/newman/insomnia-data/"
           ls -l /tmp/newman/insomnia-data/
 
+      - name: Run Collection Tadeu
+        run: |
+          newman run /tmp/newman/insomnia-data/Tadeu-QualityEagles-Collection.json \
+          --globals /tmp/newman/insomnia-data/Tadeu-QualityEagles-Globals.json \
+          --delay-request 2 \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export ./result/Report_Collection_Italo.html      
+      
       - name: Run Collection Ítalo
         run: |
           newman run /tmp/newman/insomnia-data/Italo-QualityEagles.postman_collection.json \
