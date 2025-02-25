@@ -26,7 +26,7 @@ jobs:
           echo "Finding absolute path of specific file:"
           ABSOLUTE_PATH=$(realpath ./insomnia-data/Italo-QualityEagles.postman_globals.json)
           echo "Absolute path: $ABSOLUTE_PATH"
-          
+
       - name: Check Newman and Node version
         run: |
           newman --version
@@ -38,6 +38,24 @@ jobs:
 
       - name: Create result directory
         run: mkdir -p ./result
+
+      - name: Ensure /etc/newman/insomnia-data exists
+        run: |
+          echo "Ensuring the /etc/newman/insomnia-data directory exists..."
+          mkdir -p /etc/newman/insomnia-data
+          ls -l /etc/newman/insomnia-data
+
+      - name: Verify required files in /etc/newman/insomnia-data
+        run: |
+          echo "Verifying if the necessary files exist..."
+          if [ ! -f "/etc/newman/insomnia-data/Italo-QualityEagles.postman_collection.json" ]; then
+            echo "Error: Italo-QualityEagles.postman_collection.json not found!"
+            exit 1
+          fi
+          if [ ! -f "/etc/newman/insomnia-data/Italo-QualityEagles.postman_globals.json" ]; then
+            echo "Error: Italo-QualityEagles.postman_globals.json not found!"
+            exit 1
+          fi
 
       - name: Run Collection Ítalo
         run: |
@@ -77,8 +95,13 @@ jobs:
 
       - name: Ensure insomnia-data directory exists
         run: |
-          echo "Verifying if the insomnia-data directory exists..."
+          echo "Ensuring the /etc/newman/insomnia-data directory exists..."
+          mkdir -p /etc/newman/insomnia-data
           ls -l /etc/newman/insomnia-data/
+
+      - name: Verify required files in /etc/newman/insomnia-data
+        run: |
+          echo "Verifying if the necessary files exist..."
           if [ ! -f "/etc/newman/insomnia-data/Tadeu-QualityEagles-Collection.json" ]; then
             echo "Error: Tadeu-QualityEagles-Collection.json not found!"
             exit 1
