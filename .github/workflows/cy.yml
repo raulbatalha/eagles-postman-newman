@@ -39,11 +39,19 @@ jobs:
       - name: Create result directory
         run: mkdir -p ./result
 
-      - name: Ensure /tmp/newman/insomnia-data exists
+      - name: Ensure /tmp/newman/insomnia-data exists and copy files
         run: |
           echo "Ensuring the /tmp/newman/insomnia-data directory exists..."
           mkdir -p /tmp/newman/insomnia-data
-          ls -l /tmp/newman/insomnia-data
+          ls -l /tmp/newman/insomnia-data/
+          
+          echo "Copying necessary files..."
+          cp ./insomnia-data/Italo-QualityEagles.postman_collection.json /tmp/newman/insomnia-data/
+          cp ./insomnia-data/Italo-QualityEagles.postman_globals.json /tmp/newman/insomnia-data/
+          cp ./insomnia-data/Jamile-QualityEagles.postman_collection.json /tmp/newman/insomnia-data/
+          cp ./insomnia-data/Jamile-QualityEagles.postman_globals.json /tmp/newman/insomnia-data/
+          cp ./insomnia-data/Tadeu-QualityEagles-Collection.json /tmp/newman/insomnia-data/
+          cp ./insomnia-data/Tadeu-QualityEagles-Globals.json /tmp/newman/insomnia-data/
 
       - name: Verify required files in /tmp/newman/insomnia-data
         run: |
@@ -54,6 +62,22 @@ jobs:
           fi
           if [ ! -f "/tmp/newman/insomnia-data/Italo-QualityEagles.postman_globals.json" ]; then
             echo "Error: Italo-QualityEagles.postman_globals.json not found!"
+            exit 1
+          fi
+          if [ ! -f "/tmp/newman/insomnia-data/Jamile-QualityEagles.postman_collection.json" ]; then
+            echo "Error: Jamile-QualityEagles.postman_collection.json not found!"
+            exit 1
+          fi
+          if [ ! -f "/tmp/newman/insomnia-data/Jamile-QualityEagles.postman_globals.json" ]; then
+            echo "Error: Jamile-QualityEagles.postman_globals.json not found!"
+            exit 1
+          fi
+          if [ ! -f "/tmp/newman/insomnia-data/Tadeu-QualityEagles-Collection.json" ]; then
+            echo "Error: Tadeu-QualityEagles-Collection.json not found!"
+            exit 1
+          fi
+          if [ ! -f "/tmp/newman/insomnia-data/Tadeu-QualityEagles-Globals.json" ]; then
+            echo "Error: Tadeu-QualityEagles-Globals.json not found!"
             exit 1
           fi
 
@@ -93,11 +117,15 @@ jobs:
       - name: Print working directory
         run: pwd
 
-      - name: Ensure /tmp/newman/insomnia-data exists
+      - name: Ensure /tmp/newman/insomnia-data exists and copy files
         run: |
           echo "Ensuring the /tmp/newman/insomnia-data directory exists..."
           mkdir -p /tmp/newman/insomnia-data
           ls -l /tmp/newman/insomnia-data/
+
+          echo "Copying necessary files..."
+          cp ./insomnia-data/Tadeu-QualityEagles-Collection.json /tmp/newman/insomnia-data/
+          cp ./insomnia-data/Tadeu-QualityEagles-Globals.json /tmp/newman/insomnia-data/
 
       - name: Verify required files in /tmp/newman/insomnia-data
         run: |
