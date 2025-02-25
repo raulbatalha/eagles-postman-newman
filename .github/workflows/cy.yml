@@ -29,8 +29,8 @@ jobs:
 
       - name: Run Collection Ítalo
         run: |
-          newman run ./Italo-QualityEagles.postman_collection.json \
-          --globals ./Italo-QualityEagles.postman_globals.json \
+          newman run ./insomnia-data/Italo-QualityEagles.postman_collection.json \
+          --globals ./insomnia-data/Italo-QualityEagles.postman_globals.json \
           --delay-request 2 \
           --reporters cli,htmlextra \
           --reporter-htmlextra-export ./result/Report_Collection_Italo.html
