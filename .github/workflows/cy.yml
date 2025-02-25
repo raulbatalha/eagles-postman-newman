@@ -2,11 +2,9 @@ name: eagles-postman-newman
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
-  
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -27,6 +25,9 @@ jobs:
         run: |
           sudo npm install -g newman-reporter-htmlextra
 
+      - name: Create result directory
+        run: mkdir -p ./result
+
       - name: Run Collection Ítalo
         run: |
           newman run ./insomnia-data/Italo-QualityEagles.postman_collection.json \
@@ -35,39 +36,47 @@ jobs:
           --reporters cli,htmlextra \
           --reporter-htmlextra-export ./result/Report_Collection_Italo.html
 
-      - name: Create result directory
-        run: mkdir -p ./result
-
       - name: Run Collection Jamile
         run: |
-          newman run ./Jamile-QualityEagles.postman_collection.json \
-          --globals ./Jamile-QualityEagles.postman_globals.json \
+          newman run ./insomnia-data/Jamile-QualityEagles.postman_collection.json \
+          --globals ./insomnia-data/Jamile-QualityEagles.postman_globals.json \
           --delay-request 2 \
           --reporters cli,htmlextra \
           --reporter-htmlextra-export ./result/Report_Collection_Jamile.html
 
       - name: Archive Reports
-        run: |
-          zip -r ./result/reports.zip ./result/*.html
+        run: zip -r ./result/reports.zip ./result/*.html
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4
         with:
           name: reports
           path: ./result/reports.zip
+
   run-insomnia-tests:
     name: Quality Eagles Insomnia Tests
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Print working directory
         run: pwd
 
-      # - name: Change to correct directory
-      #   run: cd /home/runner/work/eagles-postman-newman
+      - name: Ensure insomnia-data directory exists
+        run: mkdir -p ./insomnia-data
+
+      - name: Verify files exist
+        run: |
+          if [ ! -f "./insomnia-data/Tadeu-QualityEagles-Collection.json" ]; then
+            echo "Error: Tadeu-QualityEagles-Collection.json not found!"
+            exit 1
+          fi
+          if [ ! -f "./insomnia-data/Tadeu-QualityEagles-Globals.json" ]; then
+            echo "Error: Tadeu-QualityEagles-Globals.json not found!"
+            exit 1
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -75,74 +84,16 @@ jobs:
           node-version: '20.x'
 
       - name: Setup inso
-        # You may pin to the exact commit or the version.
-        uses: Kong/setup-inso@cf1bf7b12e5d0092399c79025c09eba54d8182f7
-        # uses: Kong/setup-inso@b724fdcc07124e43ba013363f4ecb07c8ad56ec8
-        # uses: Kong/setup-inso@v1
+        uses: Kong/setup-inso@v1
         with:
-          # The version of inso to install
           inso-version: 10.1.1
-            # The compression algorithm to use. One of: [gzip, bzip]
-          compression: gzip
-        # Add a wrapper script to make stdout, stderr and errorcode available as outputs
-        # wrapper: # optional, default is false
 
       - name: Print inso version
         run: inso --version
 
-      - name: Verify directory
+      - name: Run Insomnia tests
         run: |
-          ls -la /home/runner/work/eagles-postman-newman/eagles-postman-newman/insomnia-data
-
-      - name: Enter into
-        run: cd /home/runner/work/eagles-postman-newman/eagles-postman-newman/insomnia-data
-
-      - name: Change permission
-        run: chmod 777 /home/runner/work/eagles-postman-newman/eagles-postman-newman/insomnia-data/*
-
-      - name: Verify directory again
-        run: |
-          ls -la /home/runner/work/eagles-postman-newman/eagles-postman-newman/insomnia-data
-
-      - name: Verify relative path
-        run: |
-          ls -la ./insomnia-data
-
-      - name: Run script
-        run: inso run test Tadeu-QualityEagles-Collection.json --env Tadeu-QualityEagles-Globals.json --workingDir ./insomnia-data --verbose --ci
-
-        # working-directory: /home/runner/work/eagles-postman-newman/eagles-postman-newman/insomnia-data
-        # run: inso run collection "Tadeu-QualityEagles-Collection" --env "Tadeu-QualityEagles-Globals" --workingDir /home/runner/work/eagles-postman-newman/eagles-postman-newman/insomnia-data --verbose --ci
-
-
-
-
-
-
-
-
-
-
-
-
-
-      # - run: echo '${{ toJson(steps.inso_version.outputs) }}'
-
-      # - name: Set up inso
-      #   uses: kong/setup-inso@v1
-      #   with:
-      #     inso-version: 10.3.1
-      # - run: inso --version
-      
-      # - uses: kong/setup-inso@v1
-      #   with:
-      #     # inso-version: 10.3.1
-      #     inso-version: 2.4.0
-      #     compression: gzip
-      # - run: inso --version
-      #   id: inso_version
-      # - run: echo '${{ toJson(steps.inso_version.outputs) }}'
-      # # - name: Lint
-      #   # run: inso lint spec Tadeu-QualityEagles-Collection_Insomnia_2025-02-24.json --ci
-      # - name: Run test suites
-      #   run: inso run collection Tadeu-QualityEagles-Collection_Insomnia_2025-02-24.json -e Tadeu-QualityEagles-Globals_Insomnia_2025-02-24.json --ci
+          inso run test Tadeu-QualityEagles-Collection.json \
+          --env Tadeu-QualityEagles-Globals.json \
+          --workingDir ./insomnia-data \
+          --verbose --ci
