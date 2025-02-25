@@ -13,9 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Print the current working directory
+        run: pwd
+
+      - name: List files and find the absolute path of a specific file
+        run: |
+          echo "Listing the files in the repository:"
+          ls -l
+          echo "Finding absolute path of specific file:"
+          ABSOLUTE_PATH=$(realpath ./insomnia-data/Italo-QualityEagles.postman_globals.json)
+          echo "Absolute path: $ABSOLUTE_PATH"
+          
       - name: Check Newman and Node version
         run: |
           newman --version
