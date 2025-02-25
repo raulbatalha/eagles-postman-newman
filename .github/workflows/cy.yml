@@ -19,13 +19,8 @@ jobs:
       - name: Print the current working directory
         run: pwd
 
-      - name: List files and find the absolute path of a specific file
-        run: |
-          echo "Listing the files in the repository:"
-          ls -l
-          echo "Finding absolute path of specific file:"
-          ABSOLUTE_PATH=$(realpath ./insomnia-data/Italo-QualityEagles.postman_globals.json)
-          echo "Absolute path: $ABSOLUTE_PATH"
+      - name: List files in repository
+        run: ls -l ./insomnia-data/
 
       - name: Check Newman and Node version
         run: |
@@ -33,53 +28,23 @@ jobs:
           node --version
 
       - name: Install newman-reporter-htmlextra
-        run: |
-          sudo npm install -g newman-reporter-htmlextra
+        run: sudo npm install -g newman-reporter-htmlextra
 
       - name: Create result directory
         run: mkdir -p ./result
 
       - name: Ensure /tmp/newman/insomnia-data exists and copy files
         run: |
-          echo "Ensuring the /tmp/newman/insomnia-data directory exists..."
+          echo "Creating directory: /tmp/newman/insomnia-data"
           mkdir -p /tmp/newman/insomnia-data
-          ls -l /tmp/newman/insomnia-data/
+          echo "Listing source files in ./insomnia-data/"
+          ls -l ./insomnia-data/
           
           echo "Copying necessary files..."
-          cp ./insomnia-data/Italo-QualityEagles.postman_collection.json /tmp/newman/insomnia-data/
-          cp ./insomnia-data/Italo-QualityEagles.postman_globals.json /tmp/newman/insomnia-data/
-          cp ./insomnia-data/Jamile-QualityEagles.postman_collection.json /tmp/newman/insomnia-data/
-          cp ./insomnia-data/Jamile-QualityEagles.postman_globals.json /tmp/newman/insomnia-data/
-          cp ./insomnia-data/Tadeu-QualityEagles-Collection.json /tmp/newman/insomnia-data/
-          cp ./insomnia-data/Tadeu-QualityEagles-Globals.json /tmp/newman/insomnia-data/
-
-      - name: Verify required files in /tmp/newman/insomnia-data
-        run: |
-          echo "Verifying if the necessary files exist..."
-          if [ ! -f "/tmp/newman/insomnia-data/Italo-QualityEagles.postman_collection.json" ]; then
-            echo "Error: Italo-QualityEagles.postman_collection.json not found!"
-            exit 1
-          fi
-          if [ ! -f "/tmp/newman/insomnia-data/Italo-QualityEagles.postman_globals.json" ]; then
-            echo "Error: Italo-QualityEagles.postman_globals.json not found!"
-            exit 1
-          fi
-          if [ ! -f "/tmp/newman/insomnia-data/Jamile-QualityEagles.postman_collection.json" ]; then
-            echo "Error: Jamile-QualityEagles.postman_collection.json not found!"
-            exit 1
-          fi
-          if [ ! -f "/tmp/newman/insomnia-data/Jamile-QualityEagles.postman_globals.json" ]; then
-            echo "Error: Jamile-QualityEagles.postman_globals.json not found!"
-            exit 1
-          fi
-          if [ ! -f "/tmp/newman/insomnia-data/Tadeu-QualityEagles-Collection.json" ]; then
-            echo "Error: Tadeu-QualityEagles-Collection.json not found!"
-            exit 1
-          fi
-          if [ ! -f "/tmp/newman/insomnia-data/Tadeu-QualityEagles-Globals.json" ]; then
-            echo "Error: Tadeu-QualityEagles-Globals.json not found!"
-            exit 1
-          fi
+          cp -v ./insomnia-data/*.json /tmp/newman/insomnia-data/
+          
+          echo "Listing copied files in /tmp/newman/insomnia-data/"
+          ls -l /tmp/newman/insomnia-data/
 
       - name: Run Collection Ítalo
         run: |
@@ -119,25 +84,15 @@ jobs:
 
       - name: Ensure /tmp/newman/insomnia-data exists and copy files
         run: |
-          echo "Ensuring the /tmp/newman/insomnia-data directory exists..."
+          echo "Creating directory: /tmp/newman/insomnia-data"
           mkdir -p /tmp/newman/insomnia-data
+          
+          echo "Copying Insomnia test files..."
+          cp -v ./insomnia-data/Tadeu-QualityEagles-Collection.json /tmp/newman/insomnia-data/
+          cp -v ./insomnia-data/Tadeu-QualityEagles-Globals.json /tmp/newman/insomnia-data/
+          
+          echo "Listing copied files in /tmp/newman/insomnia-data/"
           ls -l /tmp/newman/insomnia-data/
-
-          echo "Copying necessary files..."
-          cp ./insomnia-data/Tadeu-QualityEagles-Collection.json /tmp/newman/insomnia-data/
-          cp ./insomnia-data/Tadeu-QualityEagles-Globals.json /tmp/newman/insomnia-data/
-
-      - name: Verify required files in /tmp/newman/insomnia-data
-        run: |
-          echo "Verifying if the necessary files exist..."
-          if [ ! -f "/tmp/newman/insomnia-data/Tadeu-QualityEagles-Collection.json" ]; then
-            echo "Error: Tadeu-QualityEagles-Collection.json not found!"
-            exit 1
-          fi
-          if [ ! -f "/tmp/newman/insomnia-data/Tadeu-QualityEagles-Globals.json" ]; then
-            echo "Error: Tadeu-QualityEagles-Globals.json not found!"
-            exit 1
-          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
