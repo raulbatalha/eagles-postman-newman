@@ -2,4 +2,4 @@ FROM postman/newman:alpine
 WORKDIR /etc/newman
 COPY *.json .
 ENTRYPOINT ["newman", "run"]
-CMD ["collection_quality_eagles_t13.json", "--globals", "globals_quality_eagles_t13.json"]
+CMD ["insomnia-data/Tadeu-QualityEagles-Collection.json", "--globals", "insomnia-data/Tadeu-QualityEagles-Globals.json"]
