@@ -30,8 +30,8 @@ jobs:
 
       - name: Run Collection Ítalo
         run: |
-          newman run ./insomnia-data/Italo-QualityEagles.postman_collection.json \
-          --globals ./insomnia-data/Italo-QualityEagles.postman_globals.json \
+          newman run /etc/newman/Italo-QualityEagles.postman_collection.json \
+          --globals /etc/newman/Italo-QualityEagles.postman_globals.json \
           --delay-request 2 \
           --reporters cli,htmlextra \
           --reporter-htmlextra-export ./result/Report_Collection_Italo.html
@@ -93,7 +93,7 @@ jobs:
 
       - name: Run Insomnia tests
         run: |
-          inso run test Tadeu-QualityEagles-Collection.json \
-          --env Tadeu-QualityEagles-Globals.json \
-          --workingDir ./insomnia-data \
+          inso run test /etc/newman/insomnia-data/Tadeu-QualityEagles-Collection.json \
+          --env /etc/newman/insomnia-data/Tadeu-QualityEagles-Globals.json \
+          --workingDir /etc/newman/insomnia-data \
           --verbose --ci
